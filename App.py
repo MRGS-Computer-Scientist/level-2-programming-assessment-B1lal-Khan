@@ -4,7 +4,7 @@ from os import *
 
 class App():
 
-
+    
     def __init__(self):
         self.window = Tk()
         self.window.geometry(str(w_width) + "x" + str(w_height))
