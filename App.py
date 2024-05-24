@@ -1,47 +1,37 @@
-""" The app class of a GUI homework planner. """
-# Tkinter is for the GUI, app_settings contains all the global variables.
-from tkinter import Tk, Frame, Button
-from app_settings import w_width, w_height, window_title, tasks_bg_colour, buttons_bg_colour
+from tkinter import *
+from app_settings import *
+from os import *
 
-def addtask():
-    """ Add task function, activated when the "Add Task" button is pressed. """
-    print("Add task button pressed!")
+class App():
 
-def task_button_pressed(instance):
-    """ Activated when one of the task buttons is pressed. """
-    print(f"Task button {instance} pressed!")
 
-class App:
-    """ App. """
     def __init__(self):
-        # Sets up window.
-        window = Tk()
-        window.geometry = str(w_width) + "x" + str(w_height)
-        window.title(window_title)
+        self.window = Tk()
+        self.window.geometry(str(w_width) + "x" + str(w_height))
+        self.window.title(app_title)
 
-        # This is where the list of tasks will go.
-        tasks_frame = Frame(background=tasks_bg_colour, width=w_width, height=650)
-        tasks_frame.grid()
+        self.top_frame = Frame(background='red', width=w_width, height=100)
+        self.top_frame.pack()
 
-        # This is where the buttons at the bottom will go.
-        buttons_frame = Frame(background=buttons_bg_colour, width=w_width, height=150)
-        buttons_frame.grid()
+        self.main_frame = Frame(background=bg_color, width=w_width, height=(w_height-200))
+        self.main_frame.pack()
 
-        # Button that runs the addtask function.
-        addtask_button = Button(buttons_frame, text="+ | Add Task", command=addtask, bg=buttons_bg_colour)
-        addtask_button.place(relx=0.5, rely=0.5, anchor="center")
+        self.bottom_frame = Frame(background='blue', width=w_width, height=100)
+        self.bottom_frame.pack(side='bottom')
 
-        # Task button.
-        task_button1 = Button(tasks_frame, text="Task 1", command=task_button_pressed(1))
-        task_button1.grid(row=0,column=0)
+        self.home_button = Button(self.bottom_frame, text="Home", height=2, width=5, bg='green')
+        self.home_button.place(x=0,y=0)
 
-        task_button2 = Button(tasks_frame, text="Task 2", command=task_button_pressed(1))
-        task_button2.grid(row=1,column=0)
+        self.exit_button = Button(self.bottom_frame, text="Exit", height=2, width=5, bg='green', command=exit)
+        self.exit_button.place(x=100,y=0)
 
-        task_button3 = Button(tasks_frame, text="Task 3", command=task_button_pressed(1))
-        task_button3.grid(row=2,column=0)
+        self.dirname = path.dirname(__file__)
+        self.filename = path.join(self.dirname, 'images/')
 
-        task_button4 = Button(tasks_frame, text="Task 4", command=task_button_pressed(1))
-        task_button4.grid(row=3,column=0)
+        print("The path is", self.filename)
 
-        window.mainloop()
+        self.window.mainloop()
+
+
+    def exit(self):
+        self.window.destroy()
