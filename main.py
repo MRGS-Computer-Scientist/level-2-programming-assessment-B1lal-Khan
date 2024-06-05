@@ -57,6 +57,9 @@ def open_subject_window(parent_window):
     chemistry_button = tk.Button(subject_window, text="Chemistry", command=lambda: select_subject(subject_window, "Chemistry"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
     chemistry_button.pack(pady=10)
 
+    cms_button = tk.Button(subject_window, text="CMS", command=lambda: select_subject(subject_window, "CMS"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
+    cms_button.pack(pady=10)
+
 # Function to handle subject selection
 def select_subject(subject_window, subject):
     subject_window.destroy()
