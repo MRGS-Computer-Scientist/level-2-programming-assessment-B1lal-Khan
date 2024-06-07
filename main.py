@@ -1,7 +1,62 @@
 import tkinter as tk
 from tkinter import messagebox
 
-# Function to handle button click
+class TicTacToe:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Tic-Tac-Toe")
+        self.current_player = "X"
+        self.moves_made = 0
+        self.create_grid()
+        self.create_reset_button()
+
+    def create_grid(self):
+        self.buttons = [[None for _ in range(3)] for _ in range(3)]
+        for row in range(3):
+            for col in range(3):
+                button = tk.Button(self.root, text="", font='Arial 20 bold', width=5, height=2,
+                                   command=lambda r=row, c=col: self.on_button_click(r, c))
+                button.grid(row=row, column=col)
+                self.buttons[row][col] = button
+
+    def create_reset_button(self):
+        reset_button = tk.Button(self.root, text="Reset", font='Arial 12 bold', command=self.reset_game)
+        reset_button.grid(row=3, column=0, columnspan=3)
+
+    def on_button_click(self, row, col):
+        if self.buttons[row][col]["text"] == "" and self.current_player:
+            self.buttons[row][col]["text"] = self.current_player
+            self.moves_made += 1
+            if self.check_winner(row, col):
+                messagebox.showinfo("Game Over", f"Player {self.current_player} wins!")
+                self.current_player = None
+            elif self.moves_made == 9:
+                messagebox.showinfo("Game Over", "It's a draw!")
+                self.current_player = None
+            else:
+                self.current_player = "O" if self.current_player == "X" else "X"
+
+    def check_winner(self, row, col):
+        # Check row
+        if all(self.buttons[row][i]["text"] == self.current_player for i in range(3)):
+            return True
+        # Check column
+        if all(self.buttons[i][col]["text"] == self.current_player for i in range(3)):
+            return True
+        # Check diagonals
+        if row == col and all(self.buttons[i][i]["text"] == self.current_player for i in range(3)):
+            return True
+        if row + col == 2 and all(self.buttons[i][2-i]["text"] == self.current_player for i in range(3)):
+            return True
+        return False
+
+    def reset_game(self):
+        for row in range(3):
+            for col in range(3):
+                self.buttons[row][col]["text"] = ""
+        self.current_player = "X"
+        self.moves_made = 0
+
 def get_started():
     player1 = player1_entry.get()
     player2 = player2_entry.get()
@@ -10,7 +65,6 @@ def get_started():
     else:
         messagebox.showwarning("Warning", "Please enter both player names.")
 
-# Function to create a gradient background
 def create_gradient(canvas, color1, color2):
     width = 300
     height = 250
@@ -28,7 +82,6 @@ def create_gradient(canvas, color1, color2):
         color = f'#{nr:04x}{ng:04x}{nb:04x}'
         canvas.create_line(0, i, 300, i, fill=color)
 
-# Function to open a new window with the same gradient background
 def open_new_window():
     new_window = tk.Toplevel(root)
     new_window.title("New Page")
@@ -45,7 +98,6 @@ def open_new_window():
     choose_subject_button = tk.Button(new_window, text="Choose Subject", command=lambda: open_subject_window(new_window), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
     new_canvas.create_window(150, 125, window=choose_subject_button)
 
-# Function to open the subject selection window
 def open_subject_window(parent_window):
     subject_window = tk.Toplevel(parent_window)
     subject_window.title("Choose Subject")
@@ -60,12 +112,10 @@ def open_subject_window(parent_window):
     cms_button = tk.Button(subject_window, text="CMS", command=lambda: select_subject(subject_window, "CMS"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
     cms_button.pack(pady=10)
 
-# Function to handle subject selection
 def select_subject(subject_window, subject):
     subject_window.destroy()
     open_game_window(subject)
 
-# Function to open the game selection window
 def open_game_window(subject):
     game_window = tk.Toplevel(root)
     game_window.title("Choose Game")
@@ -80,28 +130,27 @@ def open_game_window(subject):
     connect_4_button = tk.Button(game_window, text="Connect-4", command=lambda: select_game(game_window, "Connect-4"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
     connect_4_button.pack(pady=5)
 
-# Function to handle game selection
 def select_game(game_window, game):
-    messagebox.showinfo("Game Selected", f"You have chosen {game}.")
     game_window.destroy()
+    if game == "Tic-Tac-Toe":
+        open_tic_tac_toe_window()
 
-# Create the main application window
+def open_tic_tac_toe_window():
+    tic_tac_toe_window = tk.Toplevel(root)
+    TicTacToe(tic_tac_toe_window)
+
 root = tk.Tk()
 root.title("Study Night")
 root.geometry("300x250")
 
-# Create a Canvas widget for the gradient background
 canvas = tk.Canvas(root, width=300, height=250)
 canvas.pack(fill="both", expand=True)
 
-# Create the gradient background
 create_gradient(canvas, "white", "#FF6151")
 
-# Create and place the app name label
 app_name_label = tk.Label(root, text="Study Night", bg="#FF6151", fg="white", font=("Arial", 18, "bold"))
 app_name_label_window = canvas.create_window(150, 40, window=app_name_label)
 
-# Create and place labels and entry fields for players
 player1_label = tk.Label(root, text="Player 1:", bg="#FF6151", fg="white", font=("Arial", 12))
 player1_label_window = canvas.create_window(150, 80, window=player1_label)
 
@@ -114,9 +163,7 @@ player2_label_window = canvas.create_window(150, 140, window=player2_label)
 player2_entry = tk.Entry(root, width=30)
 player2_entry_window = canvas.create_window(150, 170, window=player2_entry)
 
-# Create and place the "Get Started" button
 get_started_button = tk.Button(root, text="Get Started", command=get_started, bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
 get_started_button_window = canvas.create_window(150, 210, window=get_started_button)
 
-# Run the application
 root.mainloop()
