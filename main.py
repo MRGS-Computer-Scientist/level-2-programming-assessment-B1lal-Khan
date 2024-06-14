@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+import random
 
 class TicTacToe:
     def __init__(self, root):
@@ -15,13 +16,47 @@ class TicTacToe:
         for row in range(3):
             for col in range(3):
                 button = tk.Button(self.root, text="", font='Arial 20 bold', width=5, height=2,
-                                   command=lambda r=row, c=col: self.on_button_click(r, c))
+                                   command=lambda r=row, c=col: self.ask_question(r, c))
                 button.grid(row=row, column=col)
                 self.buttons[row][col] = button
 
     def create_reset_button(self):
         reset_button = tk.Button(self.root, text="Reset", font='Arial 12 bold', command=self.reset_game)
         reset_button.grid(row=3, column=0, columnspan=3)
+
+    def ask_question(self, row, col):
+        question, answer = self.get_random_question()
+        self.question_window = tk.Toplevel(self.root)
+        self.question_window.title("Answer the Question")
+
+        question_label = tk.Label(self.question_window, text=question, font='Arial 12 bold')
+        question_label.pack(pady=10)
+
+        self.answer_entry = tk.Entry(self.question_window, font='Arial 12')
+        self.answer_entry.pack(pady=10)
+
+        submit_button = tk.Button(self.question_window, text="Submit", font='Arial 12 bold',
+                                  command=lambda: self.check_answer(row, col, answer))
+        submit_button.pack(pady=10)
+
+    def get_random_question(self):
+        questions = [
+            ("What is 2 + 2?", "4"),
+            ("What is the capital of France?", "Paris"),
+            ("What is 5 * 6?", "30"),
+            ("What is the color of the sky?", "blue"),
+            ("How many continents are there?", "7")
+        ]
+        return random.choice(questions)
+
+    def check_answer(self, row, col, correct_answer):
+        player_answer = self.answer_entry.get()
+        self.question_window.destroy()
+        if player_answer.lower() == correct_answer.lower():
+            self.on_button_click(row, col)
+        else:
+            messagebox.showinfo("Wrong Answer", f"Incorrect! The correct answer is: {correct_answer}")
+            self.current_player = "O" if self.current_player == "X" else "X"
 
     def on_button_click(self, row, col):
         if self.buttons[row][col]["text"] == "" and self.current_player:
@@ -37,13 +72,10 @@ class TicTacToe:
                 self.current_player = "O" if self.current_player == "X" else "X"
 
     def check_winner(self, row, col):
-        # Check row
         if all(self.buttons[row][i]["text"] == self.current_player for i in range(3)):
             return True
-        # Check column
         if all(self.buttons[i][col]["text"] == self.current_player for i in range(3)):
             return True
-        # Check diagonals
         if row == col and all(self.buttons[i][i]["text"] == self.current_player for i in range(3)):
             return True
         if row + col == 2 and all(self.buttons[i][2-i]["text"] == self.current_player for i in range(3)):
@@ -84,7 +116,7 @@ def create_gradient(canvas, color1, color2):
 
 def open_new_window():
     new_window = tk.Toplevel(root)
-    new_window.title("New Page")
+    new_window.title("Subject + Game Selection")
     new_window.geometry("300x250")
 
     new_canvas = tk.Canvas(new_window, width=300, height=250)
