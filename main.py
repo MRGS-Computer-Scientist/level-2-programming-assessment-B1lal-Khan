@@ -56,7 +56,7 @@ class TicTacToe:
             self.on_button_click(row, col)
         else:
             messagebox.showinfo("Wrong Answer", f"Incorrect! The correct answer is: {correct_answer}")
-            self.current_player = "O" if self.current_player == "X" else "X"
+            self.ask_question(row, col)
 
     def on_button_click(self, row, col):
         if self.buttons[row][col]["text"] == "" and self.current_player:
