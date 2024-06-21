@@ -3,11 +3,12 @@ from tkinter import messagebox
 import random
 
 class TicTacToe:
-    def __init__(self, root):
+    def __init__(self, root, subject):
         self.root = root
         self.root.title("Tic-Tac-Toe")
         self.current_player = "X"
         self.moves_made = 0
+        self.subject = subject
         self.create_grid()
         self.create_reset_button()
 
@@ -40,19 +41,27 @@ class TicTacToe:
         submit_button.pack(pady=10)
 
     def get_random_question(self):
-        questions = [
-            ("What is the tallest mountain in the world?", "Mount Everest"),
-            ("Who wrote 'Hamlet'?", "William Shakespeare"),
-            ("What is the smallest planet in our solar system?", "Mercury"),
-            ("What is the chemical symbol for water?", "H2O"),
-            ("What is the speed of light?", "299,792,458 meters per second"),
-            ("Who painted the Mona Lisa?", "Leonardo da Vinci"),
-            ("What is the capital of Japan?", "Tokyo"),
-            ("Who developed the theory of relativity?", "Albert Einstein"),
-            ("Which planet is known as the Red Planet?", "Mars"),
-            ("What is the largest ocean on Earth?", "Pacific Ocean")
-        ]
-        return random.choice(questions)
+        questions = {
+            "Math": [
+                ("What is the equation for a linear graph?", "y=mx+c"),
+                ("What is 2x + 3x?", "5x"),
+                ("What is 2 + 2?", "4"),
+                ("What is 5 * 6?", "30")
+            ],
+            "Chemistry": [
+                ("What is the symbol for Gold?", "Au"),
+                ("What is the atomic number for carbon?", "6"),
+                ("How many states of matter are there?", "4")
+            ],
+            "General Knowledge": [
+                ("How many continents are there?", "7"),
+                ("What is the eleventh month of the year?", "November"),
+                ("What is the color of aircraft black boxes?", "orange"),
+                ("What is the colour of the sky?", "blue"),
+                ("How many months are there in a year?", "12")
+            ]
+        }
+        return random.choice(questions[self.subject])
 
     def check_answer(self, row, col, correct_answer):
         player_answer = self.answer_entry.get()
@@ -161,20 +170,20 @@ def open_game_window(subject):
     label = tk.Label(game_window, text=f"Subject: {subject}\nChoose Game", bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
     label.pack(pady=10)
 
-    tic_tac_toe_button = tk.Button(game_window, text="Tic-Tac-Toe", command=lambda: select_game(game_window, "Tic-Tac-Toe"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
+    tic_tac_toe_button = tk.Button(game_window, text="Tic-Tac-Toe", command=lambda: select_game(game_window, subject, "Tic-Tac-Toe"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
     tic_tac_toe_button.pack(pady=5)
 
-    connect_4_button = tk.Button(game_window, text="Connect-4", command=lambda: select_game(game_window, "Connect-4"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
+    connect_4_button = tk.Button(game_window, text="Connect-4", command=lambda: select_game(game_window, subject, "Connect-4"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
     connect_4_button.pack(pady=5)
 
-def select_game(game_window, game):
+def select_game(game_window, subject, game):
     game_window.destroy()
     if game == "Tic-Tac-Toe":
-        open_tic_tac_toe_window()
+        open_tic_tac_toe_window(subject)
 
-def open_tic_tac_toe_window():
+def open_tic_tac_toe_window(subject):
     tic_tac_toe_window = tk.Toplevel(root)
-    TicTacToe(tic_tac_toe_window)
+    TicTacToe(tic_tac_toe_window, subject)
 
 root = tk.Tk()
 root.title("Study Night")
