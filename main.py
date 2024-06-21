@@ -41,11 +41,16 @@ class TicTacToe:
 
     def get_random_question(self):
         questions = [
-            ("What is 2 + 2?", "4"),
-            ("What is the capital of France?", "Paris"),
-            ("What is 5 * 6?", "30"),
-            ("What is the color of the sky?", "blue"),
-            ("How many continents are there?", "7")
+            ("What is the tallest mountain in the world?", "Mount Everest"),
+            ("Who wrote 'Hamlet'?", "William Shakespeare"),
+            ("What is the smallest planet in our solar system?", "Mercury"),
+            ("What is the chemical symbol for water?", "H2O"),
+            ("What is the speed of light?", "299,792,458 meters per second"),
+            ("Who painted the Mona Lisa?", "Leonardo da Vinci"),
+            ("What is the capital of Japan?", "Tokyo"),
+            ("Who developed the theory of relativity?", "Albert Einstein"),
+            ("Which planet is known as the Red Planet?", "Mars"),
+            ("What is the largest ocean on Earth?", "Pacific Ocean")
         ]
         return random.choice(questions)
 
@@ -141,8 +146,8 @@ def open_subject_window(parent_window):
     chemistry_button = tk.Button(subject_window, text="Chemistry", command=lambda: select_subject(subject_window, "Chemistry"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
     chemistry_button.pack(pady=10)
 
-    cms_button = tk.Button(subject_window, text="CMS", command=lambda: select_subject(subject_window, "CMS"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
-    cms_button.pack(pady=10)
+    general_knowledge_button = tk.Button(subject_window, text="General Knowledge", command=lambda: select_subject(subject_window, "General Knowledge"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
+    general_knowledge_button.pack(pady=10)
 
 def select_subject(subject_window, subject):
     subject_window.destroy()
@@ -181,21 +186,21 @@ canvas.pack(fill="both", expand=True)
 create_gradient(canvas, "white", "#FF6151")
 
 app_name_label = tk.Label(root, text="Study Night", bg="#FF6151", fg="white", font=("Arial", 18, "bold"))
-app_name_label_window = canvas.create_window(150, 40, window=app_name_label)
+canvas.create_window(150, 40, window=app_name_label)
 
 player1_label = tk.Label(root, text="Player 1:", bg="#FF6151", fg="white", font=("Arial", 12))
-player1_label_window = canvas.create_window(150, 80, window=player1_label)
+canvas.create_window(150, 80, window=player1_label)
 
 player1_entry = tk.Entry(root, width=30)
-player1_entry_window = canvas.create_window(150, 110, window=player1_entry)
+canvas.create_window(150, 110, window=player1_entry)
 
 player2_label = tk.Label(root, text="Player 2:", bg="#FF6151", fg="white", font=("Arial", 12))
-player2_label_window = canvas.create_window(150, 140, window=player2_label)
+canvas.create_window(150, 140, window=player2_label)
 
 player2_entry = tk.Entry(root, width=30)
-player2_entry_window = canvas.create_window(150, 170, window=player2_entry)
+canvas.create_window(150, 170, window=player2_entry)
 
 get_started_button = tk.Button(root, text="Get Started", command=get_started, bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
-get_started_button_window = canvas.create_window(150, 210, window=get_started_button)
+canvas.create_window(150, 210, window=get_started_button)
 
 root.mainloop()
