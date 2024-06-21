@@ -50,6 +50,7 @@ class TicTacToe:
             ],
             "Chemistry": [
                 ("What is the symbol for Gold?", "Au"),
+                ("How many elements are in the periodic table?", "118"),
                 ("What is the atomic number for carbon?", "6"),
                 ("How many states of matter are there?", "4")
             ],
