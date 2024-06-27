@@ -104,120 +104,6 @@ class TicTacToe:
         self.current_player = "X"
         self.moves_made = 0
 
-class Connect4:
-    def __init__(self, root, subject):
-        self.root = root
-        self.root.title("Connect 4")
-        self.current_player = "X"
-        self.rows = 6
-        self.columns = 7
-        self.subject = subject
-        self.grid = [[' ' for _ in range(self.columns)] for _ in range(self.rows)]
-        self.create_grid()
-        self.create_reset_button()
-
-    def create_grid(self):
-        self.buttons = [[None for _ in range(self.columns)] for _ in range(self.rows)]
-        for row in range(self.rows):
-            for col in range(self.columns):
-                button = tk.Button(self.root, text="", font='Arial 20 bold', width=5, height=2,
-                                   command=lambda c=col: self.ask_question(c))
-                button.grid(row=row, column=col)
-                self.buttons[row][col] = button
-
-    def create_reset_button(self):
-        reset_button = tk.Button(self.root, text="Reset", font='Arial 12 bold', command=self.reset_game)
-        reset_button.grid(row=self.rows, column=0, columnspan=self.columns)
-
-    def ask_question(self, col):
-        question, answer = self.get_random_question()
-        self.question_window = tk.Toplevel(self.root)
-        self.question_window.title("Answer the Question")
-
-        question_label = tk.Label(self.question_window, text=question, font='Arial 12 bold')
-        question_label.pack(pady=10)
-
-        self.answer_entry = tk.Entry(self.question_window, font='Arial 12')
-        self.answer_entry.pack(pady=10)
-
-        submit_button = tk.Button(self.question_window, text="Submit", font='Arial 12 bold',
-                                  command=lambda: self.check_answer(col, answer))
-        submit_button.pack(pady=10)
-
-    def get_random_question(self):
-        questions = {
-            "Math": [
-                ("What is the equation for a linear graph?", "y=mx+c"),
-                ("What is 2x + 3x?", "5x"),
-                ("What is 2 + 2?", "4"),
-                ("What is 5 * 6?", "30")
-            ],
-            "Chemistry": [
-                ("What is the symbol for Gold?", "Au"),
-                ("How many elements are in the periodic table?", "118"),
-                ("What is the atomic number for carbon?", "6"),
-                ("How many states of matter are there?", "4")
-            ],
-            "General Knowledge": [
-                ("How many continents are there?", "7"),
-                ("What is the eleventh month of the year?", "November"),
-                ("What is the color of aircraft black boxes?", "orange"),
-                ("What is the colour of the sky?", "blue"),
-                ("How many months are there in a year?", "12")
-            ]
-        }
-        return random.choice(questions[self.subject])
-
-    def check_answer(self, col, correct_answer):
-        player_answer = self.answer_entry.get()
-        self.question_window.destroy()
-        if player_answer.lower() == correct_answer.lower():
-            self.on_button_click(col)
-        else:
-            messagebox.showinfo("Wrong Answer", f"Incorrect! The correct answer is: {correct_answer}")
-            self.ask_question(col)
-
-    def on_button_click(self, col):
-        for row in reversed(range(self.rows)):
-            if self.grid[row][col] == ' ':
-                self.grid[row][col] = self.current_player
-                self.buttons[row][col]["text"] = self.current_player
-                if self.check_winner(row, col):
-                    messagebox.showinfo("Game Over", f"Player {self.current_player} wins!")
-                    self.current_player = None
-                elif all(self.grid[row][col] != ' ' for row in range(self.rows) for col in range(self.columns)):
-                    messagebox.showinfo("Game Over", "It's a draw!")
-                    self.current_player = None
-                else:
-                    self.current_player = "O" if self.current_player == "X" else "X"
-                break
-
-    def check_winner(self, row, col):
-        def check_direction(delta_row, delta_col):
-            count = 0
-            for i in range(-3, 4):
-                r = row + i * delta_row
-                c = col + i * delta_col
-                if 0 <= r < self.rows and 0 <= c < self.columns and self.grid[r][c] == self.current_player:
-                    count += 1
-                    if count == 4:
-                        return True
-                else:
-                    count = 0
-            return False
-
-        return (check_direction(1, 0) or  # Vertical
-                check_direction(0, 1) or  # Horizontal
-                check_direction(1, 1) or  # Diagonal /
-                check_direction(1, -1))   # Diagonal \
-
-    def reset_game(self):
-        for row in range(self.rows):
-            for col in range(self.columns):
-                self.grid[row][col] = ' '
-                self.buttons[row][col]["text"] = ""
-        self.current_player = "X"
-
 def get_started():
     player1 = player1_entry.get()
     player2 = player2_entry.get()
@@ -295,16 +181,10 @@ def select_game(game_window, subject, game):
     game_window.destroy()
     if game == "Tic-Tac-Toe":
         open_tic_tac_toe_window(subject)
-    elif game == "Connect-4":
-        open_connect_4_window(subject)
 
 def open_tic_tac_toe_window(subject):
     tic_tac_toe_window = tk.Toplevel(root)
     TicTacToe(tic_tac_toe_window, subject)
-
-def open_connect_4_window(subject):
-    connect_4_window = tk.Toplevel(root)
-    Connect4(connect_4_window, subject)
 
 root = tk.Tk()
 root.title("Study Night")
