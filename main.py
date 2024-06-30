@@ -3,6 +3,7 @@ from tkinter import messagebox
 import random
 
 class TicTacToe:
+    # 
     def __init__(self, root, subject):
         self.root = root
         self.root.title("Tic-Tac-Toe")
@@ -12,6 +13,7 @@ class TicTacToe:
         self.create_grid()
         self.create_reset_button()
 
+    # creates a 3x3 grid of buttons for my Toc-Tac-Toe component
     def create_grid(self):
         self.buttons = [[None for _ in range(3)] for _ in range(3)]
         for row in range(3):
@@ -21,10 +23,12 @@ class TicTacToe:
                 button.grid(row=row, column=col)
                 self.buttons[row][col] = button
 
+    # creates a reset button which will reset the Tic-Tac-Toe game
     def create_reset_button(self):
         reset_button = tk.Button(self.root, text="Reset", font='Arial 12 bold', command=self.reset_game)
         reset_button.grid(row=3, column=0, columnspan=3)
 
+    # Displays a question to the user when they click on an empty square
     def ask_question(self, row, col):
         question, answer = self.get_random_question()
         self.question_window = tk.Toplevel(self.root)
@@ -40,6 +44,7 @@ class TicTacToe:
                                   command=lambda: self.check_answer(row, col, answer))
         submit_button.pack(pady=10)
 
+    # Allows the app to get a random question 
     def get_random_question(self):
         questions = {
             "Math": [
@@ -64,6 +69,7 @@ class TicTacToe:
         }
         return random.choice(questions[self.subject])
 
+    # Checks if the users answer is correct, if not it tells them the correct answer
     def check_answer(self, row, col, correct_answer):
         player_answer = self.answer_entry.get()
         self.question_window.destroy()
@@ -73,6 +79,7 @@ class TicTacToe:
             messagebox.showinfo("Wrong Answer", f"Incorrect! The correct answer is: {correct_answer}")
             self.ask_question(row, col)
 
+    # Handles the button clicks and updates the game within reasonable time
     def on_button_click(self, row, col):
         if self.buttons[row][col]["text"] == "" and self.current_player:
             self.buttons[row][col]["text"] = self.current_player
@@ -86,6 +93,7 @@ class TicTacToe:
             else:
                 self.current_player = "O" if self.current_player == "X" else "X"
 
+    # Checks if the current player has won the game
     def check_winner(self, row, col):
         if all(self.buttons[row][i]["text"] == self.current_player for i in range(3)):
             return True
@@ -97,6 +105,7 @@ class TicTacToe:
             return True
         return False
 
+    # Resets the game to its initial/origional state
     def reset_game(self):
         for row in range(3):
             for col in range(3):
@@ -104,6 +113,7 @@ class TicTacToe:
         self.current_player = "X"
         self.moves_made = 0
 
+# Gets the player names and starts the app (shows error message if the user doesn't enter name/s)
 def get_started():
     player1 = player1_entry.get()
     player2 = player2_entry.get()
@@ -112,6 +122,7 @@ def get_started():
     else:
         messagebox.showwarning("Warning", "Please enter both player names.")
 
+# Creates the gradient background in my app
 def create_gradient(canvas, color1, color2):
     width = 300
     height = 250
@@ -129,6 +140,7 @@ def create_gradient(canvas, color1, color2):
         color = f'#{nr:04x}{ng:04x}{nb:04x}'
         canvas.create_line(0, i, 300, i, fill=color)
 
+# Opens a window for my subject + game selection page
 def open_new_window():
     new_window = tk.Toplevel(root)
     new_window.title("Subject + Game Selection")
@@ -145,6 +157,7 @@ def open_new_window():
     choose_subject_button = tk.Button(new_window, text="Choose Subject", command=lambda: open_subject_window(new_window), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
     new_canvas.create_window(150, 125, window=choose_subject_button)
 
+# Opens a window for the user to select the subject
 def open_subject_window(parent_window):
     subject_window = tk.Toplevel(parent_window)
     subject_window.title("Choose Subject")
@@ -159,10 +172,12 @@ def open_subject_window(parent_window):
     general_knowledge_button = tk.Button(subject_window, text="General Knowledge", command=lambda: select_subject(subject_window, "General Knowledge"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
     general_knowledge_button.pack(pady=10)
 
+# Select the subject and open the game window
 def select_subject(subject_window, subject):
     subject_window.destroy()
     open_game_window(subject)
 
+# Opens a window for the user to select the game
 def open_game_window(subject):
     game_window = tk.Toplevel(root)
     game_window.title("Choose Game")
@@ -177,11 +192,13 @@ def open_game_window(subject):
     connect_4_button = tk.Button(game_window, text="Connect-4", command=lambda: select_game(game_window, subject, "Connect-4"), bg="white", fg="#FF6151", font=("Arial", 12, "bold"))
     connect_4_button.pack(pady=5)
 
+# Select the game and open the corresponding window
 def select_game(game_window, subject, game):
     game_window.destroy()
     if game == "Tic-Tac-Toe":
         open_tic_tac_toe_window(subject)
 
+# Open the Tic-Tac-Toe game window
 def open_tic_tac_toe_window(subject):
     tic_tac_toe_window = tk.Toplevel(root)
     TicTacToe(tic_tac_toe_window, subject)
