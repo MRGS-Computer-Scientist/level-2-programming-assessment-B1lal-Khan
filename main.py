@@ -3,7 +3,7 @@ from tkinter import messagebox
 import random
 
 class TicTacToe:
-    # 
+    # This initializes the Tic-Tac-Toe game with the given root window and subject
     def __init__(self, root, subject):
         self.root = root
         self.root.title("Tic-Tac-Toe")
