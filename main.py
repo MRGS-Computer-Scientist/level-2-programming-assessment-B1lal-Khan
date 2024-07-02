@@ -11,7 +11,7 @@ class TicTacToe:
         self.moves_made = 0
         self.subject = subject
         self.create_grid()
-        self.create_reset_button()
+        self.create_control_buttons()
 
     def create_grid(self):
         self.buttons = [[None for _ in range(3)] for _ in range(3)]
@@ -28,11 +28,19 @@ class TicTacToe:
                 button.grid(row=row, column=col)
                 self.buttons[row][col] = button
 
-    def create_reset_button(self):
+    def create_control_buttons(self):
+        control_frame = tk.Frame(self.root)
+        control_frame.grid(row=3, column=0, columnspan=3)
+
         reset_button = tk.Button(
-            self.root, text="Reset", font="Arial 12 bold", command=self.reset_game
+            control_frame, text="Reset", font="Arial 12 bold", command=self.reset_game
         )
-        reset_button.grid(row=3, column=0, columnspan=3)
+        reset_button.pack(side=tk.LEFT, padx=10)
+
+        home_button = tk.Button(
+            control_frame, text="Home", font="Arial 12 bold", command=self.go_home
+        )
+        home_button.pack(side=tk.LEFT, padx=10)
 
     def ask_question(self, row, col):
         question, answer = self.get_random_question()
@@ -124,6 +132,10 @@ class TicTacToe:
                 self.buttons[row][col]["text"] = ""
         self.current_player = "X"
         self.moves_made = 0
+
+    def go_home(self):
+        self.root.destroy()
+        create_main_window()
 
 def get_started():
     player1 = player1_entry.get()
@@ -275,44 +287,50 @@ def open_tic_tac_toe_window(subject):
     tic_tac_toe_window = tk.Toplevel(root)
     TicTacToe(tic_tac_toe_window, subject)
 
-root = tk.Tk()
-root.title("Study Night")
-root.geometry("300x250")
+def create_main_window():
+    global root
+    root = tk.Tk()
+    root.title("Study Night")
+    root.geometry("300x250")
 
-canvas = tk.Canvas(root, width=300, height=250)
-canvas.pack(fill="both", expand=True)
+    canvas = tk.Canvas(root, width=300, height=250)
+    canvas.pack(fill="both", expand=True)
 
-create_gradient(canvas, "white", "#FF6151")
+    create_gradient(canvas, "white", "#FF6151")
 
-app_name_label = tk.Label(
-    root, text="Study Night", bg="#FF6151", fg="white", font=("Arial", 18, "bold")
-)
-canvas.create_window(150, 40, window=app_name_label)
+    app_name_label = tk.Label(
+        root, text="Study Night", bg="#FF6151", fg="white", font=("Arial", 18, "bold")
+    )
+    canvas.create_window(150, 40, window=app_name_label)
 
-player1_label = tk.Label(
-    root, text="Player 1:", bg="#FF6151", fg="white", font=("Arial", 12)
-)
-canvas.create_window(150, 80, window=player1_label)
+    global player1_entry, player2_entry
 
-player1_entry = tk.Entry(root, width=30)
-canvas.create_window(150, 110, window=player1_entry)
+    player1_label = tk.Label(
+        root, text="Player 1:", bg="#FF6151", fg="white", font=("Arial", 12)
+    )
+    canvas.create_window(150, 80, window=player1_label)
 
-player2_label = tk.Label(
-    root, text="Player 2:", bg="#FF6151", fg="white", font=("Arial", 12)
-)
-canvas.create_window(150, 140, window=player2_label)
+    player1_entry = tk.Entry(root, width=30)
+    canvas.create_window(150, 110, window=player1_entry)
 
-player2_entry = tk.Entry(root, width=30)
-canvas.create_window(150, 170, window=player2_entry)
+    player2_label = tk.Label(
+        root, text="Player 2:", bg="#FF6151", fg="white", font=("Arial", 12)
+    )
+    canvas.create_window(150, 140, window=player2_label)
 
-get_started_button = tk.Button(
-    root,
-    text="Get Started",
-    command=get_started,
-    bg="white",
-    fg="#FF6151",
-    font=("Arial", 12, "bold"),
-)
-canvas.create_window(150, 210, window=get_started_button)
+    player2_entry = tk.Entry(root, width=30)
+    canvas.create_window(150, 170, window=player2_entry)
 
-root.mainloop()
+    get_started_button = tk.Button(
+        root,
+        text="Get Started",
+        command=get_started,
+        bg="white",
+        fg="#FF6151",
+        font=("Arial", 12, "bold"),
+    )
+    canvas.create_window(150, 210, window=get_started_button)
+
+    root.mainloop()
+
+create_main_window()
