@@ -4,6 +4,7 @@ import random
 import re
 
 class TicTacToe:
+    # This initializes the Tic-Tac-Toe game with the main window and the selected subject.
     def __init__(self, root, subject):
         self.root = root
         self.root.title("Tic-Tac-Toe")
@@ -13,6 +14,7 @@ class TicTacToe:
         self.create_grid()
         self.create_control_buttons()
 
+    # Create the grid of buttons for the Tic-Tac-Toe board.
     def create_grid(self):
         self.buttons = [[None for _ in range(3)] for _ in range(3)]
         for row in range(3):
@@ -28,6 +30,7 @@ class TicTacToe:
                 button.grid(row=row, column=col)
                 self.buttons[row][col] = button
 
+    # Create the control buttons (Reset and Home) below the Tic-Tac-Toe board.
     def create_control_buttons(self):
         control_frame = tk.Frame(self.root)
         control_frame.grid(row=3, column=0, columnspan=3)
@@ -42,6 +45,7 @@ class TicTacToe:
         )
         home_button.pack(side=tk.LEFT, padx=10)
 
+    # Ask a question when a player clicks on a Tic-Tac-Toe cell.
     def ask_question(self, row, col):
         question, answer = self.get_random_question()
         self.question_window = tk.Toplevel(self.root)
@@ -63,6 +67,7 @@ class TicTacToe:
         )
         submit_button.pack(pady=10)
 
+    # Get a random question and answer pair based on the selected subject.
     def get_random_question(self):
         questions = {
             "Math": [
@@ -87,6 +92,7 @@ class TicTacToe:
         }
         return random.choice(questions[self.subject])
 
+    # Check the player's answer and proceed accordingly.
     def check_answer(self, row, col, correct_answer):
         player_answer = self.answer_entry.get()
         self.question_window.destroy()
@@ -98,6 +104,7 @@ class TicTacToe:
             )
             self.ask_question(row, col)
 
+    # Handle a player's move by marking the button and checking for a winner or draw.
     def on_button_click(self, row, col):
         if self.buttons[row][col]["text"] == "" and self.current_player:
             self.buttons[row][col]["text"] = self.current_player
@@ -111,6 +118,7 @@ class TicTacToe:
             else:
                 self.current_player = "O" if self.current_player == "X" else "X"
 
+    # Check if the current player has won the game.
     def check_winner(self, row, col):
         if all(self.buttons[row][i]["text"] == self.current_player for i in range(3)):
             return True
@@ -126,6 +134,7 @@ class TicTacToe:
             return True
         return False
 
+    # Reset the game to its initial state.
     def reset_game(self):
         for row in range(3):
             for col in range(3):
@@ -133,10 +142,12 @@ class TicTacToe:
         self.current_player = "X"
         self.moves_made = 0
 
+    # Close the Tic-Tac-Toe window and go back to the main window.
     def go_home(self):
         self.root.destroy()
         create_main_window()
 
+# Start the game after player names have been validated.
 def get_started():
     player1 = player1_entry.get()
     player2 = player2_entry.get()
@@ -149,6 +160,7 @@ def get_started():
     else:
         messagebox.showwarning("Warning", "Please enter both player names.")
 
+# Validate the entered player name for length and disallowed characters.
 def validate_player_name(name):
     if len(name) > 15:
         messagebox.showerror("Error", "Users have a maximum limit of 15 characters")
@@ -158,6 +170,7 @@ def validate_player_name(name):
         return False
     return True
 
+# Create a gradient background for the canvas.
 def create_gradient(canvas, color1, color2):
     width = 300
     height = 250
@@ -175,6 +188,7 @@ def create_gradient(canvas, color1, color2):
         color = f"#{nr:04x}{ng:04x}{nb:04x}"
         canvas.create_line(0, i, 300, i, fill=color)
 
+# Open a new window to select the subject and game.
 def open_new_window():
     new_window = tk.Toplevel(root)
     new_window.title("Subject + Game Selection")
@@ -205,6 +219,7 @@ def open_new_window():
     )
     new_canvas.create_window(150, 125, window=choose_subject_button)
 
+# Open a window to choose the subject for the game.
 def open_subject_window(parent_window):
     subject_window = tk.Toplevel(parent_window)
     subject_window.title("Choose Subject")
@@ -240,10 +255,12 @@ def open_subject_window(parent_window):
     )
     general_knowledge_button.pack(pady=10)
 
+# Select the subject and open the game selection window.
 def select_subject(subject_window, subject):
     subject_window.destroy()
     open_game_window(subject)
 
+# Open a window to choose the game.
 def open_game_window(subject):
     game_window = tk.Toplevel(root)
     game_window.title("Choose Game")
@@ -278,15 +295,18 @@ def open_game_window(subject):
     )
     connect_4_button.pack(pady=5)
 
+# Select the game and open the corresponding game window.
 def select_game(game_window, subject, game):
     game_window.destroy()
     if game == "Tic-Tac-Toe":
         open_tic_tac_toe_window(subject)
 
+# Open the Tic-Tac-Toe game window with the selected subject.
 def open_tic_tac_toe_window(subject):
     tic_tac_toe_window = tk.Toplevel(root)
     TicTacToe(tic_tac_toe_window, subject)
 
+# Create the main window for the application.
 def create_main_window():
     global root
     root = tk.Tk()
