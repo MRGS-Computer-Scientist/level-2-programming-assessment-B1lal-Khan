@@ -3,9 +3,8 @@ from tkinter import messagebox
 import random
 import re
 
-
 class TicTacToe:
-    # This initializes the Tic-Tac-Toe game with the main window and the selected subject.
+    # This function initializes the Tic-Tac-Toe game with the main window and the selected subject
     def __init__(self, root, subject):
         self.root = root
         self.root.title("Tic-Tac-Toe")
@@ -15,7 +14,7 @@ class TicTacToe:
         self.create_grid()
         self.create_control_buttons()
 
-    # Create the grid of buttons for the Tic-Tac-Toe board.
+    # This function creates the grid of buttons for the Tic-Tac-Toe board.
     def create_grid(self):
         self.buttons = [[None for _ in range(3)] for _ in range(3)]
         for row in range(3):
@@ -31,7 +30,7 @@ class TicTacToe:
                 button.grid(row=row, column=col)
                 self.buttons[row][col] = button
 
-    # Create the control buttons (Reset and Home) below the Tic-Tac-Toe board.
+    # This function creates the control buttons (Reset and Home) below the Tic-Tac-Toe board
     def create_control_buttons(self):
         control_frame = tk.Frame(self.root)
         control_frame.grid(row=3, column=0, columnspan=3)
@@ -46,7 +45,7 @@ class TicTacToe:
         )
         home_button.pack(side=tk.LEFT, padx=10)
 
-    # Ask a question when a player clicks on a Tic-Tac-Toe cell.
+    # This function asks a question when a player clicks on a Tic-Tac-Toe cell.
     def ask_question(self, row, col):
         question, answer = self.get_random_question()
         self.question_window = tk.Toplevel(self.root)
@@ -68,7 +67,7 @@ class TicTacToe:
         )
         submit_button.pack(pady=10)
 
-    # Get a random question and answer pair based on the selected subject.
+    # This function gets a random question and answer pair based on the selected subject
     def get_random_question(self):
         questions = {
             "Math": [
@@ -93,7 +92,7 @@ class TicTacToe:
         }
         return random.choice(questions[self.subject])
 
-    # Check the player's answer and proceed accordingly.
+    # This function checks the player's answer and proceed accordingly.
     def check_answer(self, row, col, correct_answer):
         player_answer = self.answer_entry.get()
         self.question_window.destroy()
@@ -119,7 +118,7 @@ class TicTacToe:
             else:
                 self.current_player = "O" if self.current_player == "X" else "X"
 
-    # Check if the current player has won the game.
+    # Checks if the current player has won the game.
     def check_winner(self, row, col):
         if all(self.buttons[row][i]["text"] == self.current_player for i in range(3)):
             return True
@@ -135,7 +134,7 @@ class TicTacToe:
             return True
         return False
 
-    # Reset the game to its initial state.
+    # Resets the game to its initial state.
     def reset_game(self):
         for row in range(3):
             for col in range(3):
@@ -143,226 +142,215 @@ class TicTacToe:
         self.current_player = "X"
         self.moves_made = 0
 
-    # Close the Tic-Tac-Toe window and go back to the main window.
+    # Closes the Tic-Tac-Toe window and go back to the main window.
     def go_home(self):
         self.root.destroy()
-        create_main_window()
+        MainWindow().create_main_window()
 
+class MainWindow:
+    # Initializes the main window for the application.
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.title("Study Night")
+        self.root.geometry("300x250")
+        self.create_widgets()
+        self.root.mainloop()
 
-# Start the game after player names have been validated.
-def get_started():
-    player1 = player1_entry.get()
-    player2 = player2_entry.get()
+    # Create widgets for the main window, including player name entry and buttons.
+    def create_widgets(self):
+        canvas = tk.Canvas(self.root, width=300, height=250)
+        canvas.pack(fill="both", expand=True)
+        self.create_gradient(canvas, "white", "#FF6151")
 
-    if not validate_player_name(player1) or not validate_player_name(player2):
-        return
+        app_name_label = tk.Label(
+            self.root, text="Study Night", bg="#FF6151", fg="white", font=("Arial", 18, "bold")
+        )
+        canvas.create_window(150, 40, window=app_name_label)
 
-    if player1 and player2:
-        open_new_window()
-    else:
-        messagebox.showwarning("Warning", "Please enter both player names.")
+        player1_label = tk.Label(
+            self.root, text="Player 1:", bg="#FF6151", fg="white", font=("Arial", 12)
+        )
+        canvas.create_window(150, 80, window=player1_label)
 
+        self.player1_entry = tk.Entry(self.root, width=30)
+        canvas.create_window(150, 110, window=self.player1_entry)
 
-# Validate the entered player name for length and disallowed characters.
-def validate_player_name(name):
-    if len(name) > 15:
-        messagebox.showerror("Error", "Users have a maximum limit of 15 characters")
-        return False
-    if re.search(r"[!@#$%^&*()]", name):
-        messagebox.showerror("Error", "No symbols are allowed.")
-        return False
-    return True
+        player2_label = tk.Label(
+            self.root, text="Player 2:", bg="#FF6151", fg="white", font=("Arial", 12)
+        )
+        canvas.create_window(150, 140, window=player2_label)
 
+        self.player2_entry = tk.Entry(self.root, width=30)
+        canvas.create_window(150, 170, window=self.player2_entry)
 
-# Create a gradient background for the canvas.
-def create_gradient(canvas, color1, color2):
-    width = 300
-    height = 250
-    limit = height
-    (r1, g1, b1) = root.winfo_rgb(color1)
-    (r2, g2, b2) = root.winfo_rgb(color2)
-    r_ratio = float(r2 - r1) / limit
-    g_ratio = float(g2 - g1) / limit
-    b_ratio = float(b2 - b1) / limit
+        get_started_button = tk.Button(
+            self.root,
+            text="Get Started",
+            command=self.get_started,
+            bg="white",
+            fg="#FF6151",
+            font=("Arial", 12, "bold"),
+        )
+        canvas.create_window(150, 210, window=get_started_button)
 
-    for i in range(limit):
-        nr = int(r1 + (r_ratio * i))
-        ng = int(g1 + (g_ratio * i))
-        nb = int(b1 + (b_ratio * i))
-        color = f"#{nr:04x}{ng:04x}{nb:04x}"
-        canvas.create_line(0, i, 300, i, fill=color)
+    # This function creates a gradient background for the canvas.
+    def create_gradient(self, canvas, color1, color2):
+        width = 300
+        height = 250
+        limit = height
+        (r1, g1, b1) = self.root.winfo_rgb(color1)
+        (r2, g2, b2) = self.root.winfo_rgb(color2)
+        r_ratio = float(r2 - r1) / limit
+        g_ratio = float(g2 - g1) / limit
+        b_ratio = float(b2 - b1) / limit
 
+        for i in range(limit):
+            nr = int(r1 + (r_ratio * i))
+            ng = int(g1 + (g_ratio * i))
+            nb = int(b1 + (b_ratio * i))
+            color = f"#{nr:04x}{ng:04x}{nb:04x}"
+            canvas.create_line(0, i, 300, i, fill=color)
 
-# Open a new window to select the subject and game.
-def open_new_window():
-    new_window = tk.Toplevel(root)
-    new_window.title("Subject + Game Selection")
-    new_window.geometry("300x250")
+    # Starts the game after player names have been validated.
+    def get_started(self):
+        player1 = self.player1_entry.get()
+        player2 = self.player2_entry.get()
 
-    new_canvas = tk.Canvas(new_window, width=300, height=250)
-    new_canvas.pack(fill="both", expand=True)
+        if not self.validate_player_name(player1) or not self.validate_player_name(player2):
+            return
 
-    create_gradient(new_canvas, "white", "#FF6151")
+        if player1 and player2:
+            self.open_new_window()
+        else:
+            messagebox.showwarning("Warning", "Please enter both player names.")
 
-    home_button = tk.Button(
-        new_window,
-        text="Home",
-        command=new_window.destroy,
-        bg="white",
-        fg="#FF6151",
-        font=("Arial", 12, "bold"),
-    )
-    new_canvas.create_window(30, 20, window=home_button)
+    # Validate the entered player name for length and disallowed characters.
+    def validate_player_name(self, name):
+        if len(name) > 15:
+            messagebox.showerror("Error", "Users have a maximum limit of 15 characters")
+            return False
+        if re.search(r'[!@#$%^&*()]', name):
+            messagebox.showerror("Error", "No symbols are allowed.")
+            return False
+        return True
 
-    choose_subject_button = tk.Button(
-        new_window,
-        text="Choose Subject",
-        command=lambda: open_subject_window(new_window),
-        bg="white",
-        fg="#FF6151",
-        font=("Arial", 12, "bold"),
-    )
-    new_canvas.create_window(150, 125, window=choose_subject_button)
+    # This function opens a new window to select the subject and game.
+    def open_new_window(self):
+        new_window = tk.Toplevel(self.root)
+        new_window.title("Subject + Game Selection")
+        new_window.geometry("300x250")
 
+        new_canvas = tk.Canvas(new_window, width=300, height=250)
+        new_canvas.pack(fill="both", expand=True)
 
-# Open a window to choose the subject for the game.
-def open_subject_window(parent_window):
-    subject_window = tk.Toplevel(parent_window)
-    subject_window.title("Choose Subject")
-    subject_window.geometry("200x150")
+        self.create_gradient(new_canvas, "white", "#FF6151")
 
-    math_button = tk.Button(
-        subject_window,
-        text="Math",
-        command=lambda: select_subject(subject_window, "Math"),
-        bg="white",
-        fg="#FF6151",
-        font=("Arial", 12, "bold"),
-    )
-    math_button.pack(pady=10)
+        home_button = tk.Button(
+            new_window,
+            text="Home",
+            command=new_window.destroy,
+            bg="white",
+            fg="#FF6151",
+            font=("Arial", 12, "bold"),
+        )
+        new_canvas.create_window(30, 20, window=home_button)
 
-    chemistry_button = tk.Button(
-        subject_window,
-        text="Chemistry",
-        command=lambda: select_subject(subject_window, "Chemistry"),
-        bg="white",
-        fg="#FF6151",
-        font=("Arial", 12, "bold"),
-    )
-    chemistry_button.pack(pady=10)
+        choose_subject_button = tk.Button(
+            new_window,
+            text="Choose Subject",
+            command=lambda: self.open_subject_window(new_window),
+            bg="white",
+            fg="#FF6151",
+            font=("Arial", 12, "bold"),
+        )
+        new_canvas.create_window(150, 125, window=choose_subject_button)
 
-    general_knowledge_button = tk.Button(
-        subject_window,
-        text="General Knowledge",
-        command=lambda: select_subject(subject_window, "General Knowledge"),
-        bg="white",
-        fg="#FF6151",
-        font=("Arial", 12, "bold"),
-    )
-    general_knowledge_button.pack(pady=10)
+    # Open a window to choose the subject for the game.
+    def open_subject_window(self, parent_window):
+        subject_window = tk.Toplevel(parent_window)
+        subject_window.title("Choose Subject")
+        subject_window.geometry("200x150")
 
+        math_button = tk.Button(
+            subject_window,
+            text="Math",
+            command=lambda: self.select_subject(subject_window, "Math"),
+            bg="white",
+            fg="#FF6151",
+            font=("Arial", 12, "bold"),
+        )
+        math_button.pack(pady=10)
 
-# Select the subject and open the game selection window.
-def select_subject(subject_window, subject):
-    subject_window.destroy()
-    open_game_window(subject)
+        chemistry_button = tk.Button(
+            subject_window,
+            text="Chemistry",
+            command=lambda: self.select_subject(subject_window, "Chemistry"),
+            bg="white",
+            fg="#FF6151",
+            font=("Arial", 12, "bold"),
+        )
+        chemistry_button.pack(pady=10)
 
+        general_knowledge_button = tk.Button(
+            subject_window,
+            text="General Knowledge",
+            command=lambda: self.select_subject(subject_window, "General Knowledge"),
+            bg="white",
+            fg="#FF6151",
+            font=("Arial", 12, "bold"),
+        )
+        general_knowledge_button.pack(pady=10)
 
-# Open a window to choose the game.
-def open_game_window(subject):
-    game_window = tk.Toplevel(root)
-    game_window.title("Choose Game")
-    game_window.geometry("200x150")
+    # Selects the subject and open the game selection window.
+    def select_subject(self, subject_window, subject):
+        subject_window.destroy()
+        self.open_game_window(subject)
 
-    label = tk.Label(
-        game_window,
-        text=f"Subject: {subject}\nChoose Game",
-        bg="white",
-        fg="#FF6151",
-        font=("Arial", 12, "bold"),
-    )
-    label.pack(pady=10)
+    # This function opens a window to choose the game.
+    def open_game_window(self, subject):
+        game_window = tk.Toplevel(self.root)
+        game_window.title("Choose Game")
+        game_window.geometry("200x150")
 
-    tic_tac_toe_button = tk.Button(
-        game_window,
-        text="Tic-Tac-Toe",
-        command=lambda: select_game(game_window, subject, "Tic-Tac-Toe"),
-        bg="white",
-        fg="#FF6151",
-        font=("Arial", 12, "bold"),
-    )
-    tic_tac_toe_button.pack(pady=5)
+        label = tk.Label(
+            game_window,
+            text=f"Subject: {subject}\nChoose Game",
+            bg="white",
+            fg="#FF6151",
+            font=("Arial", 12, "bold"),
+        )
+        label.pack(pady=10)
 
-    connect_4_button = tk.Button(
-        game_window,
-        text="Connect-4",
-        command=lambda: select_game(game_window, subject, "Connect-4"),
-        bg="white",
-        fg="#FF6151",
-        font=("Arial", 12, "bold"),
-    )
-    connect_4_button.pack(pady=5)
+        tic_tac_toe_button = tk.Button(
+            game_window,
+            text="Tic-Tac-Toe",
+            command=lambda: self.select_game(game_window, subject, "Tic-Tac-Toe"),
+            bg="white",
+            fg="#FF6151",
+            font=("Arial", 12, "bold"),
+        )
+        tic_tac_toe_button.pack(pady=5)
 
+        connect_4_button = tk.Button(
+            game_window,
+            text="Connect-4",
+            command=lambda: self.select_game(game_window, subject, "Connect-4"),
+            bg="white",
+            fg="#FF6151",
+            font=("Arial", 12, "bold"),
+        )
+        connect_4_button.pack(pady=5)
 
-# Select the game and open the corresponding game window.
-def select_game(game_window, subject, game):
-    game_window.destroy()
-    if game == "Tic-Tac-Toe":
-        open_tic_tac_toe_window(subject)
+    # Selects the game and open the corresponding game window.
+    def select_game(self, game_window, subject, game):
+        game_window.destroy()
+        if game == "Tic-Tac-Toe":
+            self.open_tic_tac_toe_window(subject)
 
+    # Opens the Tic-Tac-Toe game window with the selected subject.
+    def open_tic_tac_toe_window(self, subject):
+        tic_tac_toe_window = tk.Toplevel(self.root)
+        TicTacToe(tic_tac_toe_window, subject)
 
-# Open the Tic-Tac-Toe game window with the selected subject.
-def open_tic_tac_toe_window(subject):
-    tic_tac_toe_window = tk.Toplevel(root)
-    TicTacToe(tic_tac_toe_window, subject)
-
-
-# Create the main window for the application.
-def create_main_window():
-    global root
-    root = tk.Tk()
-    root.title("Study Night")
-    root.geometry("300x250")
-
-    canvas = tk.Canvas(root, width=300, height=250)
-    canvas.pack(fill="both", expand=True)
-
-    create_gradient(canvas, "white", "#FF6151")
-
-    app_name_label = tk.Label(
-        root, text="Study Night", bg="#FF6151", fg="white", font=("Arial", 18, "bold")
-    )
-    canvas.create_window(150, 40, window=app_name_label)
-
-    global player1_entry, player2_entry
-
-    player1_label = tk.Label(
-        root, text="Player 1:", bg="#FF6151", fg="white", font=("Arial", 12)
-    )
-    canvas.create_window(150, 80, window=player1_label)
-
-    player1_entry = tk.Entry(root, width=30)
-    canvas.create_window(150, 110, window=player1_entry)
-
-    player2_label = tk.Label(
-        root, text="Player 2:", bg="#FF6151", fg="white", font=("Arial", 12)
-    )
-    canvas.create_window(150, 140, window=player2_label)
-
-    player2_entry = tk.Entry(root, width=30)
-    canvas.create_window(150, 170, window=player2_entry)
-
-    get_started_button = tk.Button(
-        root,
-        text="Get Started",
-        command=get_started,
-        bg="white",
-        fg="#FF6151",
-        font=("Arial", 12, "bold"),
-    )
-    canvas.create_window(150, 210, window=get_started_button)
-
-    root.mainloop()
-
-
-create_main_window()
+if __name__ == "__main__":
+    MainWindow()
